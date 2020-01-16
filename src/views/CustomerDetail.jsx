@@ -125,7 +125,7 @@ class CustomerDetail extends Component {
    fetch(
       proxyurl +
         "https://pytpnxf5zi.execute-api.ap-southeast-2.amazonaws.com/DEV?doc_id=" +
-        doc_id + "&doc_path="+ doc_path,
+        doc_id + "&doc_path=" + doc_path,
       {
         method: "delete",
         headers: { "Content-Type": "application/json" }
@@ -236,7 +236,7 @@ class CustomerDetail extends Component {
                                 <div
                                   className="col-md-2"
                                   onClick={() =>
-                                    this.deleteDocument(prop.doc_id)
+                                    this.deleteDocument(prop.doc_id,prop.doc_path)
                                   }
                                 >
                                   <i
