@@ -120,12 +120,12 @@ class CustomerDetail extends Component {
       });
   }
 
-  deleteDocument(doc_id) {
+  deleteDocument(doc_id,doc_path) {
     const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    fetch(
+   fetch(
       proxyurl +
         "https://pytpnxf5zi.execute-api.ap-southeast-2.amazonaws.com/DEV?doc_id=" +
-        doc_id,
+        doc_id + "&doc_path="+ doc_path,
       {
         method: "delete",
         headers: { "Content-Type": "application/json" }
