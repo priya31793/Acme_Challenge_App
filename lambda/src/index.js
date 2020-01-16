@@ -133,8 +133,53 @@ function downloadFile(event,callback){
 }
 
 /* Delete the S3 Files  - customers doc */
+ const deleteS3File = async (file_name, callback) => {
+
+   let params = {
+    Bucket: 'acmecustomer',
+    Key: 'documents/' + file_name
+  }
+    
+   try {
+        await s3.headObject(params).promise();
+        console.log("File Found in S3");
+      try{
+        await s3.deleteObject(params).promise();
+        console.log("File Has been deleted Successfully");
+        
+        const response = {
+
+            "isBase64Encoded": false,
+            "statusCode": 200,
+            "body": JSON.stringify({"result" : "File Has been deleted Successfully"})
+        };
+        callback(null, response);
+      }
+      catch(err){
+          const response = {
+            "isBase64Encoded": false,
+            "statusCode": err.statusCode,
+            "body": JSON.stringify(err)
+        };
+        
+        callback (response,null);
+
+      }
+    } catch (err) {
+        console.log("File not Found ERROR : " + err.code);
+        const response = {
+            "isBase64Encoded": false,
+            "statusCode": err.statusCode,
+            "body": JSON.stringify(err)
+        };
+        callback (response,null);
+    }
+}
+
+
 function  deleteItem(event,callback) {
-	let doc_id = event.params.querystring.doc_id
+	let doc_id = event.params.querystring.doc_id;
+	let doc_path = event.params.querystring.doc_path;
 	var params = {
 		Key : {
 			"doc_id" : doc_id,
@@ -145,11 +190,14 @@ function  deleteItem(event,callback) {
 		if(err){
 		    callback(err, null);
 		}else{
-			const response = {
-			  statusCode: 200,
-			  hits: data
-			};
-		  callback(null, response);
+			
+			deleteS3File(doc_path, callback);
+			
+			// const response = {
+			//   statusCode: 200,
+			//   hits: data
+			// };
+		 // callback(null, response);
 		}
 	});
 }
